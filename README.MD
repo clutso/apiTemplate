@@ -2,64 +2,105 @@
 
 ## recipe
 
+Working and tested on:
+
+- 03/04/2021
+- AWS t2.micro using Ubuntu Server 18.04 LTS image
+
+
 ```
-# git clone 
+# git clone https://github.com/clutso/apiTemplate.git
 # cd apiTemplate
-# chmod +w setup.sh 
+# chmod 755 setup.sh 
 # ./setup.sh
 ```
 
-?# sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
-?# pip3 install flask
-# touch /var/www/api/__init__.py
-# touch /var/www/api/my_flask_app.py
-# touch /var/www/api/my_flask_app.wsgi
-# apt-get install libapache2-mod-wsgi-py3
+test entering http://<your.ip.addr.ess>/api/
+
+
+## Detailed explaination 
+
+First thing to do is to install some tools and dependencies:
+
+    - apache2 (sudo apt install apache2)
+    - python3-pip (sudo apt install python3-pip)
+    - libapache2-mod-wsgi-py3 (sudo apt install libapache2-mod-wsgi-py3)
+
+Is highly important that python 3.6 or greater is installed, you can take a look by running:
+
+    # python -V
+
+or 
+
+    # python3 -V
+
+In case you experience issues try solvng by running:
+
+    # sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
+
+Then get the python dependencies:
+    
+    - flask (**pip3 install flask** or **pip install flask**)
+
+Proceed to backup apache config
+
+    # sudo cp /etc/apache2/sites-enabled/000-default.conf /etc/apache2/sites-enabled/000-default.conf.old
+
+Next thing to do is to edit apache configuration file (you will need do this as superuser):
+
+    #sudo nano /etc/apache2/sites-enabled/000-default.conf
  
-# sudo cp /etc/apache2/sites-enabled/000-default.conf /etc/apache2/sites-enabled/000-default.conf.old
- 
-#sudo nano /etc/apache2/sites-enabled/000-default.conf
- 
- 
-        ServerAdmin webmaster@localhost
-        DocumentRoot /var/www/html
-        WSGIDaemonProcess api user=user1 group=group1 threads=5
-        WSGIScriptAlias / /var/www/api/api.wsgi
+ inside that file you may have sometihing similar to this (replace <with your values> properly)
 
-        <Directory /var/www/api>
-                WSGIProcessGroup yourapplication
-                WSGIApplicationGroup %{GLOBAL}
-                Order deny,allow
-                Allow from all
-        </Directory>
-		
-		
-#nano  /var/www/api/api.wsgi
+    ```
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/html
+    WSGIDaemonProcess <your_app_name> user=<your_user> group=<your_user_group threads=5
+    WSGIScriptAlias /<your_root_api_endpoint> </route/to/your/api>/<your_app_name>.wsgi
 
-import logging
-import sys
-logging.basicConfig(stream=sys.stderr)
-sys.path.insert(0, '/home/ubuntu/flasktest/')
-from my_flask_app import app as application
-application.secret_key = 'holaMundo'
+    <Directory </route/to/your/api>>
+        WSGIProcessGroup <your_app_name>
+        WSGIApplicationGroup %{GLOBAL}
+        Order deny,allow
+        Allow from all
+    </Directory>
+	```
+Then you may populate a *.wsgi file  
 
+    #nano  </route/to/your/api>/<your_app_name>.wsgi
 
-#nano /var/www/api/api.wsgi
+Try something like this (don't forget to properly replace <with your values>): 
 
-from flask import Flask
-app = Flask(__name__)
+    ```
+    import logging
+    import sys
+    logging.basicConfig(stream=sys.stderr)
+    sys.path.insert(0, '/home/ubuntu/flasktest/')
+    from my_flask_app import app as application
+    ```
 
-@app.route("/")
-def home():
-    return "Hey there!"
+Don't forget to create your app file, 
+    
+    #nano  </route/to/your/api>/<your_app_name>.py
 
-if __name__ == "__main__":
-    app.run()
+This is a very simple example: 
 
+    ```
+    from flask import Flask
+    app = Flask(__name__)
 
-sudo systemctl restart apache
+    @app.route("/")
+    def home():
+        return "Hey there!"
 
+    if __name__ == "__main__":
+        app.run()
+    ```
 
-## Explained recipe 
+Finally restart apache to reload changes
 
+    #sudo systemctl restart apache
 
+Test by entering your IP address and appending the endpoint you have specified..
+
+Enjoy!
