@@ -50,9 +50,8 @@ Next thing to do is to edit apache configuration file (you will need do this as 
 
     #sudo nano /etc/apache2/sites-enabled/000-default.conf
  
- inside that file you may have sometihing similar to this (replace <with your values> properly)
+ inside that file you may have sometihing similar to this (replace \<with your values\> properly)
 
-    ```
     ServerAdmin webmaster@localhost
     DocumentRoot /var/www/html
     WSGIDaemonProcess <your_app_name> user=<your_user> group=<your_user_group threads=5
@@ -64,20 +63,19 @@ Next thing to do is to edit apache configuration file (you will need do this as 
         Order deny,allow
         Allow from all
     </Directory>
-	```
+    
 Then you may populate a *.wsgi file  
 
     #nano  </route/to/your/api>/<your_app_name>.wsgi
 
-Try something like this (don't forget to properly replace <with your values>): 
-
-    ```
+Try something like this (don't forget to properly replace \<with your values\>): 
+    
     import logging
     import sys
     logging.basicConfig(stream=sys.stderr)
     sys.path.insert(0, '/home/ubuntu/flasktest/')
     from my_flask_app import app as application
-    ```
+    
 
 Don't forget to create your app file, 
     
@@ -85,7 +83,6 @@ Don't forget to create your app file,
 
 This is a very simple example: 
 
-    ```
     from flask import Flask
     app = Flask(__name__)
 
@@ -95,7 +92,6 @@ This is a very simple example:
 
     if __name__ == "__main__":
         app.run()
-    ```
 
 Finally restart apache to reload changes
 
