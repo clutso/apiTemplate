@@ -32,7 +32,7 @@ cat << EOF > /etc/apache2/sites-enabled/000-default.conf
 
         WSGIDaemonProcess $NAME user=ubuntu group=ubuntu threads=5
         WSGIScriptAlias /api $IDir/$FILE
-        <Directory /var $IDir>
+        <Directory $IDir>
                 WSGIProcessGroup  $NAME
                 WSGIApplicationGroup %{GLOBAL}
                 Require all granted
@@ -56,6 +56,8 @@ logging.basicConfig(stream=sys.stderr)
 sys.path.insert(0, "$IDir")
 from  $NAME import app as application
 EOF
+
+systemctl restart apache2
 '
 
 
