@@ -2,6 +2,13 @@
 
 ## recipe
 
+```
+# git clone 
+# cd apiTemplate
+# chmod +w setup.sh 
+# ./setup.sh
+```
+
 ?# sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 ?# pip3 install flask
 # touch /var/www/api/__init__.py
