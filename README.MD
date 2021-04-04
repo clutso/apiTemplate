@@ -1,6 +1,6 @@
 # Template for a simple API using Python, flask and apache
 
-## recipe
+## Quick recipe
 
 Working and tested on:
 
