@@ -43,6 +43,20 @@ cat << EOF > /etc/apache2/sites-enabled/000-default.conf
 
 </VirtualHost>
 
+EOF
 
 
-EOF'
+cat << EOF > ./api.wsgi
+
+#! /usr/bin/python3.6
+
+import logging
+import sys
+logging.basicConfig(stream=sys.stderr)
+sys.path.insert(0, "$IDir")
+from  $NAME import app as application
+EOF
+'
+
+
+
